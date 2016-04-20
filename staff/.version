@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="ASCII"?>
+<com.intersys.eclipse.sync.library:AtelierProject xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:com.intersys.eclipse.sync.library="http:///com/intersys/eclipse/sync/library/model/sync.ecore" name="staff">
+  <resourceList name="AbsenceType.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/AbsenceType.cls">
+    <version serverTimestamp="2016-04-09 22:17:32.044" lastUpdateTimestamp="1461023682359"/>
+  </resourceList>
+  <resourceList name="AcademicDegree.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/AcademicDegree.cls">
+    <version serverTimestamp="2016-04-09 22:17:32.118" lastUpdateTimestamp="1461023682374"/>
+  </resourceList>
+  <resourceList name="Address.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/Address.cls">
+    <version serverTimestamp="2016-04-09 22:17:32.251" lastUpdateTimestamp="1461023682374"/>
+  </resourceList>
+  <resourceList name="Award.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/Award.cls">
+    <version serverTimestamp="2016-04-09 22:17:32.408" lastUpdateTimestamp="1461023682390"/>
+  </resourceList>
+  <resourceList name="CardRecord.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/CardRecord.cls">
+    <version serverTimestamp="2016-04-09 22:17:32.477" lastUpdateTimestamp="1461023682390"/>
+  </resourceList>
+  <resourceList name="CertificateEducation.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/CertificateEducation.cls">
+    <version serverTimestamp="2016-04-09 22:17:32.554" lastUpdateTimestamp="1461023682390"/>
+  </resourceList>
+  <resourceList name="CertificateSpeciality.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/CertificateSpeciality.cls">
+    <version serverTimestamp="2016-04-09 22:17:32.660" lastUpdateTimestamp="1461023682405"/>
+  </resourceList>
+  <resourceList name="Citizenship.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/Citizenship.cls">
+    <version serverTimestamp="2016-04-09 22:17:32.726" lastUpdateTimestamp="1461023682405"/>
+  </resourceList>
+  <resourceList name="Country.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/Country.cls">
+    <version serverTimestamp="2016-04-09 22:17:32.792" lastUpdateTimestamp="1461023682405"/>
+  </resourceList>
+  <resourceList name="DiplomaEducation.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/DiplomaEducation.cls">
+    <version serverTimestamp="2016-04-09 22:17:32.859" lastUpdateTimestamp="1461023682405"/>
+  </resourceList>
+  <resourceList name="DocumentData.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/DocumentData.cls">
+    <version serverTimestamp="2016-04-09 22:17:32.923" lastUpdateTimestamp="1461023682421"/>
+  </resourceList>
+  <resourceList name="DocumentType.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/DocumentType.cls">
+    <version serverTimestamp="2016-04-09 22:17:32.990" lastUpdateTimestamp="1461023682421"/>
+  </resourceList>
+  <resourceList name="EducationInstitution.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/EducationInstitution.cls">
+    <version serverTimestamp="2016-04-09 22:17:33.053" lastUpdateTimestamp="1461023682437"/>
+  </resourceList>
+  <resourceList name="EducationType.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/EducationType.cls">
+    <version serverTimestamp="2016-04-09 22:17:33.123" lastUpdateTimestamp="1461023682452"/>
+  </resourceList>
+  <resourceList name="Employee.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/Employee.cls">
+    <version serverTimestamp="2016-04-11 00:56:39.558" lastUpdateTimestamp="1461023682452"/>
+  </resourceList>
+  <resourceList name="ExtendedData.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/ExtendedData.cls">
+    <version serverTimestamp="2016-04-09 22:17:33.262" lastUpdateTimestamp="1461023682452"/>
+  </resourceList>
+  <resourceList name="GeneralData.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/GeneralData.cls">
+    <version serverTimestamp="2016-04-09 22:17:33.320" lastUpdateTimestamp="1461023682452"/>
+  </resourceList>
+  <resourceList name="GetEmployee.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/GetEmployee.cls">
+    <version serverTimestamp="2016-04-09 22:17:33.381" lastUpdateTimestamp="1461023682452"/>
+  </resourceList>
+  <resourceList name="GetEmployeeResponse.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/GetEmployeeResponse.cls">
+    <version serverTimestamp="2016-04-09 22:17:33.503" lastUpdateTimestamp="1461023682452"/>
+  </resourceList>
+  <resourceList name="GetEmployeeZipped.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/GetEmployeeZipped.cls">
+    <version serverTimestamp="2016-04-09 22:17:33.583" lastUpdateTimestamp="1461023682468"/>
+  </resourceList>
+  <resourceList name="GetEmployeeZippedResponse.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/GetEmployeeZippedResponse.cls">
+    <version serverTimestamp="2016-04-09 22:17:33.648" lastUpdateTimestamp="1461023682468"/>
+  </resourceList>
+  <resourceList name="GetEmployees.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/GetEmployees.cls">
+    <version serverTimestamp="2016-04-09 22:17:33.713" lastUpdateTimestamp="1461023682468"/>
+  </resourceList>
+  <resourceList name="GetEmployeesResponse.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/GetEmployeesResponse.cls">
+    <version serverTimestamp="2016-04-09 22:17:33.785" lastUpdateTimestamp="1461023682468"/>
+  </resourceList>
+  <resourceList name="GetEmployeesZipped.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/GetEmployeesZipped.cls">
+    <version serverTimestamp="2016-04-09 22:17:33.843" lastUpdateTimestamp="1461023682468"/>
+  </resourceList>
+  <resourceList name="GetEmployeesZippedResponse.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/GetEmployeesZippedResponse.cls">
+    <version serverTimestamp="2016-04-09 22:17:33.905" lastUpdateTimestamp="1461023682468"/>
+  </resourceList>
+  <resourceList name="GetSessionLog.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/GetSessionLog.cls">
+    <version serverTimestamp="2016-04-09 22:17:34.046" lastUpdateTimestamp="1461023682483"/>
+  </resourceList>
+  <resourceList name="GetSessionLogResponse.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/GetSessionLogResponse.cls">
+    <version serverTimestamp="2016-04-09 22:17:34.143" lastUpdateTimestamp="1461023682483"/>
+  </resourceList>
+  <resourceList name="GetSessionState.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/GetSessionState.cls">
+    <version serverTimestamp="2016-04-09 22:17:34.204" lastUpdateTimestamp="1461023682483"/>
+  </resourceList>
+  <resourceList name="GetSessionStateResponse.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/GetSessionStateResponse.cls">
+    <version serverTimestamp="2016-04-09 22:17:34.268" lastUpdateTimestamp="1461023682483"/>
+  </resourceList>
+  <resourceList name="GetStaff.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/GetStaff.cls">
+    <version serverTimestamp="2016-04-09 22:17:34.330" lastUpdateTimestamp="1461023682483"/>
+  </resourceList>
+  <resourceList name="GetStaffResponse.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/GetStaffResponse.cls">
+    <version serverTimestamp="2016-04-09 22:29:21.342" lastUpdateTimestamp="1461023682483"/>
+  </resourceList>
+  <resourceList name="GetStaffZipped.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/GetStaffZipped.cls">
+    <version serverTimestamp="2016-04-09 22:17:34.466" lastUpdateTimestamp="1461023682483"/>
+  </resourceList>
+  <resourceList name="GetStaffZippedResponse.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/GetStaffZippedResponse.cls">
+    <version serverTimestamp="2016-04-09 22:17:34.534" lastUpdateTimestamp="1461023682483"/>
+  </resourceList>
+  <resourceList name="GetXmlLog.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/GetXmlLog.cls">
+    <version serverTimestamp="2016-04-09 22:17:34.595" lastUpdateTimestamp="1461023682499"/>
+  </resourceList>
+  <resourceList name="GetXmlLogResponse.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/GetXmlLogResponse.cls">
+    <version serverTimestamp="2016-04-09 22:17:34.644" lastUpdateTimestamp="1461023682499"/>
+  </resourceList>
+  <resourceList name="Kladr.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/Kladr.cls">
+    <version serverTimestamp="2016-04-09 22:17:34.708" lastUpdateTimestamp="1461023682499"/>
+  </resourceList>
+  <resourceList name="Marriage.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/Marriage.cls">
+    <version serverTimestamp="2016-04-09 22:17:34.779" lastUpdateTimestamp="1461023682515"/>
+  </resourceList>
+  <resourceList name="MedStaffFault.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/MedStaffFault.cls">
+    <version serverTimestamp="2016-04-14 22:51:39.945" lastUpdateTimestamp="1461023682515"/>
+  </resourceList>
+  <resourceList name="MedicalCare.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/MedicalCare.cls">
+    <version serverTimestamp="2016-04-09 22:17:34.902" lastUpdateTimestamp="1461023682515"/>
+  </resourceList>
+  <resourceList name="MedicalCondition.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/MedicalCondition.cls">
+    <version serverTimestamp="2016-04-09 22:17:34.964" lastUpdateTimestamp="1461023682515"/>
+  </resourceList>
+  <resourceList name="Military.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/Military.cls">
+    <version serverTimestamp="2016-04-09 22:17:35.034" lastUpdateTimestamp="1461023682546"/>
+  </resourceList>
+  <resourceList name="Nomination.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/Nomination.cls">
+    <version serverTimestamp="2016-04-09 22:17:35.165" lastUpdateTimestamp="1461023682546"/>
+  </resourceList>
+  <resourceList name="OrganizationInfo.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/OrganizationInfo.cls">
+    <version serverTimestamp="2016-04-09 22:17:35.230" lastUpdateTimestamp="1461023682546"/>
+  </resourceList>
+  <resourceList name="Position.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/Position.cls">
+    <version serverTimestamp="2016-04-09 22:17:35.289" lastUpdateTimestamp="1461023682546"/>
+  </resourceList>
+  <resourceList name="PositionType.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/PositionType.cls">
+    <version serverTimestamp="2016-04-09 22:17:35.354" lastUpdateTimestamp="1461023682546"/>
+  </resourceList>
+  <resourceList name="Post.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/Post.cls">
+    <version serverTimestamp="2016-04-09 22:17:35.415" lastUpdateTimestamp="1461023682577"/>
+  </resourceList>
+  <resourceList name="PostGraduateEducation.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/PostGraduateEducation.cls">
+    <version serverTimestamp="2016-04-09 22:17:35.509" lastUpdateTimestamp="1461023682577"/>
+  </resourceList>
+  <resourceList name="PostGraduationEducationType.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/PostGraduationEducationType.cls">
+    <version serverTimestamp="2016-04-09 22:17:35.588" lastUpdateTimestamp="1461023682593"/>
+  </resourceList>
+  <resourceList name="PutEmployee.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/PutEmployee.cls">
+    <version serverTimestamp="2016-04-09 22:17:35.650" lastUpdateTimestamp="1461023682593"/>
+  </resourceList>
+  <resourceList name="PutEmployeeZipped.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/PutEmployeeZipped.cls">
+    <version serverTimestamp="2016-04-09 22:17:35.704" lastUpdateTimestamp="1461023682593"/>
+  </resourceList>
+  <resourceList name="PutStaff.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/PutStaff.cls">
+    <version serverTimestamp="2016-04-09 22:30:09.007" lastUpdateTimestamp="1461023682593"/>
+  </resourceList>
+  <resourceList name="PutStaffZipped.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/PutStaffZipped.cls">
+    <version serverTimestamp="2016-04-09 22:17:35.816" lastUpdateTimestamp="1461023682608"/>
+  </resourceList>
+  <resourceList name="Qualification.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/Qualification.cls">
+    <version serverTimestamp="2016-04-09 22:17:35.886" lastUpdateTimestamp="1461023682608"/>
+  </resourceList>
+  <resourceList name="QualificationCategory.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/QualificationCategory.cls">
+    <version serverTimestamp="2016-04-09 22:17:35.945" lastUpdateTimestamp="1461023682608"/>
+  </resourceList>
+  <resourceList name="RecordTypeIn.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/RecordTypeIn.cls">
+    <version serverTimestamp="2016-04-14 22:51:43.324" lastUpdateTimestamp="1461023682608"/>
+  </resourceList>
+  <resourceList name="RecordTypeInAdd.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/RecordTypeInAdd.cls">
+    <version serverTimestamp="2016-04-09 22:17:36.076" lastUpdateTimestamp="1461023682624"/>
+  </resourceList>
+  <resourceList name="RecordTypeInStudType.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/RecordTypeInStudType.cls">
+    <version serverTimestamp="2016-04-09 22:17:36.141" lastUpdateTimestamp="1461023682624"/>
+  </resourceList>
+  <resourceList name="RecordTypeMoveInOrg.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/RecordTypeMoveInOrg.cls">
+    <version serverTimestamp="2016-04-09 22:17:36.201" lastUpdateTimestamp="1461023682624"/>
+  </resourceList>
+  <resourceList name="RecordTypeMoveOutOrg.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/RecordTypeMoveOutOrg.cls">
+    <version serverTimestamp="2016-04-09 22:17:36.268" lastUpdateTimestamp="1461023682624"/>
+  </resourceList>
+  <resourceList name="RecordTypeOut.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/RecordTypeOut.cls">
+    <version serverTimestamp="2016-04-09 22:17:36.332" lastUpdateTimestamp="1461023682624"/>
+  </resourceList>
+  <resourceList name="RecordTypeOutDel.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/RecordTypeOutDel.cls">
+    <version serverTimestamp="2016-04-09 22:17:36.400" lastUpdateTimestamp="1461023682639"/>
+  </resourceList>
+  <resourceList name="Regime.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/Regime.cls">
+    <version serverTimestamp="2016-04-09 22:17:36.459" lastUpdateTimestamp="1461023682639"/>
+  </resourceList>
+  <resourceList name="RegistrationType.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/RegistrationType.cls">
+    <version serverTimestamp="2016-04-09 23:43:36.003" lastUpdateTimestamp="1461023682639"/>
+  </resourceList>
+  <resourceList name="Retrainment.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/Retrainment.cls">
+    <version serverTimestamp="2016-04-09 22:17:36.588" lastUpdateTimestamp="1461023682639"/>
+  </resourceList>
+  <resourceList name="SessionResponse.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/SessionResponse.cls">
+    <version serverTimestamp="2016-04-09 22:33:44.632" lastUpdateTimestamp="1461023682655"/>
+  </resourceList>
+  <resourceList name="SessionState.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/SessionState.cls">
+    <version serverTimestamp="2016-04-09 22:17:36.715" lastUpdateTimestamp="1461023682655"/>
+  </resourceList>
+  <resourceList name="SkillImprovement.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/SkillImprovement.cls">
+    <version serverTimestamp="2016-04-09 22:17:36.843" lastUpdateTimestamp="1461023682655"/>
+  </resourceList>
+  <resourceList name="SkipPayment.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/SkipPayment.cls">
+    <version serverTimestamp="2016-04-09 22:17:36.906" lastUpdateTimestamp="1461023682655"/>
+  </resourceList>
+  <resourceList name="SkipPaymentReason.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/SkipPaymentReason.cls">
+    <version serverTimestamp="2016-04-09 22:17:36.977" lastUpdateTimestamp="1461023682655"/>
+  </resourceList>
+  <resourceList name="Speciality.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/Speciality.cls">
+    <version serverTimestamp="2016-04-09 22:17:37.035" lastUpdateTimestamp="1461023682671"/>
+  </resourceList>
+  <resourceList name="StaffEntry.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/StaffEntry.cls">
+    <version serverTimestamp="2016-04-14 22:51:46.422" lastUpdateTimestamp="1461023682671"/>
+  </resourceList>
+  <resourceList name="Subdivision.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/Subdivision.cls">
+    <version serverTimestamp="2016-04-09 22:17:37.162" lastUpdateTimestamp="1461023682671"/>
+  </resourceList>
+  <resourceList name="Territory.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/Territory.cls">
+    <version serverTimestamp="2016-04-09 22:17:37.243" lastUpdateTimestamp="1461023682671"/>
+  </resourceList>
+  <resourceList name="TestConnectionResponse.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/TestConnectionResponse.cls">
+    <version serverTimestamp="2016-04-14 22:51:38.105" lastUpdateTimestamp="1461023682686"/>
+  </resourceList>
+  <resourceList name="TimeFact.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/TimeFact.cls">
+    <version serverTimestamp="2016-04-09 22:17:37.443" lastUpdateTimestamp="1461023682686"/>
+  </resourceList>
+  <resourceList name="Vocation.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/Vocation.cls">
+    <version serverTimestamp="2016-04-09 22:17:37.502" lastUpdateTimestamp="1461023682686"/>
+  </resourceList>
+  <resourceList name="XmlError.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/XmlError.cls">
+    <version serverTimestamp="2016-04-09 22:36:14.802" lastUpdateTimestamp="1461023682686"/>
+  </resourceList>
+  <resourceList name="XmlMessage.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/XmlMessage.cls">
+    <version serverTimestamp="2016-04-09 22:35:19.086" lastUpdateTimestamp="1461023682702"/>
+  </resourceList>
+  <resourceList name="XmlRequest.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/XmlRequest.cls">
+    <version serverTimestamp="2016-04-09 22:17:37.684" lastUpdateTimestamp="1461023682702"/>
+  </resourceList>
+  <resourceList name="XmlResponse.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/XmlResponse.cls">
+    <version serverTimestamp="2016-04-09 22:34:35.614" lastUpdateTimestamp="1461023682702"/>
+  </resourceList>
+  <resourceList name="XmlStatus.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/XmlStatus.cls">
+    <version serverTimestamp="2016-04-09 22:17:37.825" lastUpdateTimestamp="1461023682702"/>
+  </resourceList>
+  <resourceList name="YesNo.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/model/YesNo.cls">
+    <version serverTimestamp="2016-04-09 22:17:37.887" lastUpdateTimestamp="1461023682702"/>
+  </resourceList>
+  <resourceList name="SexEnum.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/q6/SexEnum.cls">
+    <version serverTimestamp="2016-04-09 22:17:37.971" lastUpdateTimestamp="1461023682702"/>
+  </resourceList>
+  <resourceList name="XmlStatusState.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/q6/XmlStatusState.cls">
+    <version serverTimestamp="2016-04-09 22:17:38.027" lastUpdateTimestamp="1461023682702"/>
+  </resourceList>
+  <resourceList name="char.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/ser/char.cls">
+    <version serverTimestamp="2016-04-09 22:17:38.083" lastUpdateTimestamp="1461023682702"/>
+  </resourceList>
+  <resourceList name="duration.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/ser/duration.cls">
+    <version serverTimestamp="2016-04-09 22:17:38.131" lastUpdateTimestamp="1461023682717"/>
+  </resourceList>
+  <resourceList name="guid.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/ser/guid.cls">
+    <version serverTimestamp="2016-04-09 22:17:38.178" lastUpdateTimestamp="1461023682717"/>
+  </resourceList>
+  <resourceList name="Employee.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/ui/Employee.cls">
+    <version serverTimestamp="2016-04-18 21:02:38.751" lastUpdateTimestamp="1461027758749" serverDocName="staff.ui.Employee.cls"/>
+  </resourceList>
+  <resourceList name="Home.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/ui/Home.cls">
+    <version serverTimestamp="2016-04-12 12:38:36.749" lastUpdateTimestamp="1461023682733"/>
+  </resourceList>
+  <resourceList name="RegistrationType.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/ui/RegistrationType.cls">
+    <version serverTimestamp="2016-04-15 01:07:58.767" lastUpdateTimestamp="1461023682733"/>
+  </resourceList>
+  <resourceList name="Citizenship.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/ui/Citizenship.cls">
+    <version serverTimestamp="2016-04-15 01:18:08.076" lastUpdateTimestamp="1461023708862" serverDocName="staff.ui.Citizenship.cls"/>
+  </resourceList>
+  <resourceList name="Router.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/ui/Router.cls">
+    <version serverTimestamp="2016-04-18 20:22:26.330" lastUpdateTimestamp="1461025346303" serverDocName="staff.ui.Router.cls"/>
+  </resourceList>
+  <resourceList name="DocumentType.cls" localFilePath="file:/C:/Users/sshutov/git/staff3/staff/staff/ui/DocumentType.cls">
+    <version serverTimestamp="2016-04-18 21:11:07.020" lastUpdateTimestamp="1461028267065" serverDocName="staff.ui.DocumentType.cls"/>
+  </resourceList>
+  <resourceList name="Router.cls" localFilePath="file:/C:/Users/sshutov/git/school2016/staff/staff/ui/Router.cls">
+    <version serverTimestamp="2016-04-19 20:05:17.655" lastUpdateTimestamp="1461148605994"/>
+  </resourceList>
+</com.intersys.eclipse.sync.library:AtelierProject>
