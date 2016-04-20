@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2016.2 (Build 632U)" ts="2016-04-19 18:42:45">
+<Class name="staff.model.DocumentType">
+<Description>
+Created from: C:\InterSystems\root.xsd</Description>
+<ProcedureBlock>1</ProcedureBlock>
+<Super>%Persistent,%XML.Adaptor</Super>
+<TimeChanged>64017,80252.990033</TimeChanged>
+<TimeCreated>64017,80252.990033</TimeCreated>
+
+<Parameter name="ELEMENTQUALIFIED">
+<Default>1</Default>
+</Parameter>
+
+<Parameter name="NAMESPACE">
+<Default>http://service.rosminzdrav.ru/MedStaff</Default>
+</Parameter>
+
+<Parameter name="XMLNAME">
+<Default>DocumentType</Default>
+</Parameter>
+
+<Parameter name="XMLSEQUENCE">
+<Default>1</Default>
+</Parameter>
+
+<Index name="idKeyIndex">
+<IdKey>1</IdKey>
+<PrimaryKey>1</PrimaryKey>
+<Properties>ID</Properties>
+<Unique>1</Unique>
+</Index>
+
+<Property name="ID">
+<Type>%Integer</Type>
+<Parameter name="XMLNAME" value="ID"/>
+</Property>
+
+<Property name="Name">
+<Type>%String</Type>
+<Parameter name="MAXLEN"/>
+<Parameter name="XMLNAME" value="Name"/>
+</Property>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^staff.model.DocumentTypeD</DataLocation>
+<DefaultData>DocumentTypeDefaultData</DefaultData>
+<IdLocation>^staff.model.DocumentTypeD</IdLocation>
+<IndexLocation>^staff.model.DocumentTypeI</IndexLocation>
+<StreamLocation>^staff.model.DocumentTypeS</StreamLocation>
+<Data name="DocumentTypeDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Name</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

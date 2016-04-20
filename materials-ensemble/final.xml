@@ -1,0 +1,761 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2016.2 (Build 632U)" ts="2016-04-18 19:24:50">
+<Class name="staff.production.ApprovalBatchProcess">
+<Description>
+Процесс согласования набора изменений НСИ</Description>
+<ClassType>persistent</ClassType>
+<ProcedureBlock>1</ProcedureBlock>
+<Super>Ens.BusinessProcessBPL</Super>
+<TimeChanged>64026,42831.719029</TimeChanged>
+<TimeCreated>64024,74816.187834</TimeCreated>
+
+<XData name="BPL">
+<XMLNamespace>http://www.intersystems.com/bpl</XMLNamespace>
+<Data><![CDATA[
+<process language='objectscript' request='staff.production.ApprovalBatchRequest' response='Ens.Response'>
+<context>
+<property name="approved" type="%Boolean"/>
+<property name="i" type="%Integer"/>
+<property name="token" type="%String"/>
+</context>
+<sequence>
+
+<call name='call' target='Согласователь' async='0'>
+<annotation>Workflow: Согласование изменений справочников</annotation>
+<request type='EnsLib.Workflow.TaskRequest'>
+<assign property="callrequest.%Actions" value='"Отклонить,Согласовать"'/>
+<assign property="callrequest.%Subject" value='"Согласовать изменения справочников"'/>
+<assign property="callrequest.%Message" value='request.message'/>
+</request>
+<response type='EnsLib.Workflow.TaskResponse'>
+<trace value='callresponse.%Action'/>
+<assign property="context.approved" value='(callresponse.%Action = "Согласовать")'/>
+</response>
+</call>
+
+<foreach property="request.tokenList" key="context.i">
+<annotation>Передача решения о согласовании в ожидающие процессы</annotation>
+<assign property='context.token' value='request.tokenList.GetAt(context.i)'/>
+<assign property='status' value='##class(Ens.Host).SendDeferredResponse(context.token, ##class(Ens.StringContainer).%New(context.approved))'/>
+</foreach>
+
+</sequence>
+</process>
+]]></Data>
+</XData>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+</Storage>
+</Class>
+
+
+<Class name="staff.production.ApprovalBatchRequest">
+<Description>
+Запрос на согласование изменений набора справочников</Description>
+<Super>%Persistent,Ens.Request</Super>
+<TimeChanged>64024,81330.77765</TimeChanged>
+<TimeCreated>64024,74506.072129</TimeCreated>
+
+<Property name="message">
+<Type>%String</Type>
+<Parameter name="MAXLEN"/>
+</Property>
+
+<Property name="tokenList">
+<Type>%String</Type>
+<Collection>list</Collection>
+</Property>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^staff.prodEF5B.ApprovalBat3A4FD</DataLocation>
+<DefaultData>ApprovalBatchRequestDefaultData</DefaultData>
+<IdLocation>^staff.prodEF5B.ApprovalBat3A4FD</IdLocation>
+<IndexLocation>^staff.prodEF5B.ApprovalBat3A4FI</IndexLocation>
+<StreamLocation>^staff.prodEF5B.ApprovalBat3A4FS</StreamLocation>
+<Data name="ApprovalBatchRequestDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>message</Value>
+</Value>
+<Value name="3">
+<Value>tokenList</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+
+
+<Class name="staff.production.ApprovalBatchService">
+<Description>
+Запуск согласования изменений НСИ</Description>
+<Super>staff.production.SimpleService</Super>
+<TimeChanged>64026,57798.594492</TimeChanged>
+<TimeCreated>64024,72161.078418</TimeCreated>
+
+<Method name="OnProcessInput">
+<Description>
+Основной метод бизнес-службы, вызываемый Ensemble по сигналу от адаптера</Description>
+<FormalSpec><![CDATA[pInput:%RegisteredObject,*pOutput:%RegisteredObject,&pHint:%String]]></FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	// запрашиваем накопившиеся записи staff.production.ItemsToApprove, используя запрос "Extent", который неявно присутствует во всех хранимых классах
+	#dim resultSet As %ResultSet = ##class(%ResultSet).%New("staff.production.ItemsToApprove:Extent")
+	#dim sc As %Status = resultSet.Execute()
+	if $$$ISERR(sc) quit sc
+	
+	// заготовка сообщения-запроса для отправки в процесс согласования
+	#dim request As staff.production.ApprovalBatchRequest = ##class(staff.production.ApprovalBatchRequest).%New()
+	
+	while (resultSet.Next())
+	{
+		// извлекаем и блокируем запись staff.production.ItemsToApprove
+		#dim obj As staff.production.ItemsToApprove = ##class(staff.production.ItemsToApprove).%OpenId(resultSet.GetData(1), 4)
+		
+		set request.message = request.message _ "; " _ obj.items
+		do request.tokenList.Insert(obj.token)
+		
+		// удаляем обработанную запись из staff.production.ItemsToApprove
+		set sc = ##class(staff.production.ItemsToApprove).%DeleteId(resultSet.GetData(1))
+		if $$$ISERR(sc) return sc
+	}
+	
+	if request.tokenList.Count() > 0
+	{
+		set request.message = $zstrip(request.message, "<>W", ";")
+		
+		// отправляем запрос на согласование
+		do ..SendRequestAsync(..target, request)
+	}
+	
+	quit $$$OK
+]]></Implementation>
+</Method>
+</Class>
+
+
+<Class name="staff.production.CustomForm">
+<Super>%CSP.Page</Super>
+<TimeChanged>64024,63486.001086</TimeChanged>
+<TimeCreated>64023,3055.500577</TimeCreated>
+
+<Method name="OnPage">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<ServerOnly>1</ServerOnly>
+<Implementation><![CDATA[
+	#dim task As EnsLib.Workflow.TaskResponse = %task
+	
+	&html<<table>>
+	for i = 1:1:$length(task.%FormFields, ",")
+	{
+		#dim field As %String = $p(task.%FormFields, ",", i)
+		#dim newValue As %String = task.%FormValues.GetAt(field)
+		
+		&html<<tr>
+			<td>#(field)#</td>
+			<td><input size="100" type="text" name="#(field)#" value="#(newValue)#"/></td>
+		</tr>>
+	}
+	&html<</table>>
+	
+	quit $$$OK
+]]></Implementation>
+</Method>
+</Class>
+
+
+<Class name="staff.production.DocumentTypeDiff">
+<Description>
+Структура для хранения старого и нового названий типа документа</Description>
+<Super>%SerialObject,%XML.Adaptor</Super>
+<TimeChanged>64024,82316.974581</TimeChanged>
+<TimeCreated>64024,37043.426981</TimeCreated>
+
+<Parameter name="XMLIGNORENULL">
+<Description>
+Пустые тэги проецируются в "", а не в $char(0)</Description>
+<Default>1</Default>
+</Parameter>
+
+<Property name="ID">
+<Description>
+Идентификатор записи справочника</Description>
+<Type>%Integer</Type>
+</Property>
+
+<Property name="oldName">
+<Description>
+Старое название типа документа</Description>
+<Type>%String</Type>
+<Parameter name="MAXLEN"/>
+</Property>
+
+<Property name="newName">
+<Description>
+Новое название типа документа</Description>
+<Type>%String</Type>
+<Parameter name="MAXLEN"/>
+</Property>
+
+<Storage name="Default">
+<Type>%Library.CacheSerialState</Type>
+<State>DocumentTypeDiffState</State>
+<StreamLocation>^staff.prodEF5B.DocumentTypC8BFS</StreamLocation>
+<Data name="DocumentTypeDiffState">
+<Value name="1">
+<Value>ID</Value>
+</Value>
+<Value name="2">
+<Value>oldName</Value>
+</Value>
+<Value name="3">
+<Value>newName</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+
+
+<Class name="staff.production.ItemsToApprove">
+<Description>
+Хранимый класс, в котором накапливаются изменения справочников, ожидающие согласования</Description>
+<Super>%Persistent</Super>
+<TimeChanged>64024,81901.420964</TimeChanged>
+<TimeCreated>64024,67864.258528</TimeCreated>
+
+<Property name="items">
+<Type>%String</Type>
+<Parameter name="MAXLEN"/>
+</Property>
+
+<Property name="token">
+<Type>%String</Type>
+</Property>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^staff.produEF5B.ItemsToApproveD</DataLocation>
+<DefaultData>ItemsToApproveDefaultData</DefaultData>
+<IdLocation>^staff.produEF5B.ItemsToApproveD</IdLocation>
+<IndexLocation>^staff.produEF5B.ItemsToApproveI</IndexLocation>
+<StreamLocation>^staff.produEF5B.ItemsToApproveS</StreamLocation>
+<Data name="ItemsToApproveDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>items</Value>
+</Value>
+<Value name="3">
+<Value>token</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+
+
+<Class name="staff.production.NsiApprovalOperation">
+<Description>
+Операция, запускающая ожидание согласования изменений справочника</Description>
+<Super>Ens.BusinessOperation</Super>
+<TimeChanged>64026,57941.075985</TimeChanged>
+<TimeCreated>64024,32341.348322</TimeCreated>
+
+<XData name="MessageMap">
+<Description><![CDATA[
+Мэппинг [тип запроса -> имя метода]. Используется Ensemble при вызове операции.]]></Description>
+<Data><![CDATA[
+<MapItems>
+<MapItem MessageType="Ens.StringContainer">
+<Method>waitForApproval</Method>
+</MapItem>
+</MapItems>
+]]></Data>
+</XData>
+
+<Method name="waitForApproval">
+<Description>
+Основной метод операции.
+На вход ожидается Oid объекта. Метод запускает ожидание согласования изменений справочника, сохраняя токен в указанный объект.</Description>
+<FormalSpec>pRequest:Ens.StringContainer,*pResponse:%Persistent</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	// в pRequest.StringValue ожидается Oid объекта
+	if (pRequest.StringValue = "") quit $$$ERROR($$$InvalidArgument)
+	
+	// извлекаем и блокируем объект
+	#dim sc As %Status = $$$OK
+	#dim obj As staff.production.ItemsToApprove = ##class(%Persistent).%Open(pRequest.StringValue, 4, .sc)
+	if $$$ISERR(sc) quit sc
+
+	// запускаем ожидание ответа
+	#dim token As %String	
+	set sc = ..DeferResponse(.token)
+	if $$$ISERR(sc) quit sc
+	
+	$$$TRACE("Метод DeferResponse() вернул токен: " _ token _ "; сохраняем его в объект с Oid = " _ pRequest.StringValue)
+
+	// сохраняем токен (предполагается наличие свойства token в классе)
+	set obj.token = token
+	quit obj.%Save()
+]]></Implementation>
+</Method>
+</Class>
+
+
+<Class name="staff.production.NsiOperation">
+<Description>
+Операция вызова SOAP-сервиса НСИ</Description>
+<Super>Ens.BusinessOperation</Super>
+<TimeChanged>64026,58020.919628</TimeChanged>
+<TimeCreated>64024,37895.354572</TimeCreated>
+
+<Parameter name="SETTINGS">
+<Description>
+Свойства, указанные в параметре SETTINGS, отображаются в настройках данной операции на экране продукции</Description>
+<Default>URL:Basic,soapAction:Basic,version:Basic,userKey:Basic</Default>
+</Parameter>
+
+<Property name="soapAction">
+<Description>
+SOAP Action вызова</Description>
+<Type>%String</Type>
+<InitialExpression>"urn:SOAPServAction"</InitialExpression>
+<Parameter name="MAXLEN" value="250"/>
+</Property>
+
+<Property name="URL">
+<Description>
+Адрес целевого сервиса</Description>
+<Type>%String</Type>
+<InitialExpression>"http://nsi.rosminzdrav.ru/wsdl/SOAP-server.php"</InitialExpression>
+<Parameter name="MAXLEN" value="250"/>
+</Property>
+
+<Property name="version">
+<Description>
+Версия справочника</Description>
+<Type>%String</Type>
+<InitialExpression>"1.0"</InitialExpression>
+</Property>
+
+<Property name="userKey">
+<Description>
+Ключ авториазции</Description>
+<Type>%String</Type>
+<InitialExpression>"4fb6de524bb5a6059bbc5ecfdbf78300"</InitialExpression>
+</Property>
+
+<XData name="MessageMap">
+<Description><![CDATA[
+Мэппинг [тип запроса -> имя метода]. Используется Ensemble при вызове операции.]]></Description>
+<Data><![CDATA[
+<MapItems>
+<MapItem MessageType="Ens.StringContainer">
+<Method>call</Method>
+</MapItem>
+</MapItems>
+]]></Data>
+</XData>
+
+<Method name="call">
+<Description>
+Основной метод операции. На вход ожидается код справочника, на выходе - поток с ответом сервиса НСИ.</Description>
+<FormalSpec>pRequest:Ens.StringContainer,*pResponse:Ens.StreamContainer</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	// код справочника
+	#dim nsiCode As %String = pRequest.StringValue
+	if (nsiCode = "") quit $$$ERROR($$$InvalidArgument)
+	
+	// готовим запрос к сервису НСИ	
+	#dim request As %Stream.TmpCharacter = ##class(%Stream.TmpCharacter).%New()
+	do request.Write(
+		"<getRefbook xmlns=""urn:service"">" _
+			"<userKey2>" _ ..userKey _ "</userKey2>" _ 
+			"<refbookCode1>" _ nsiCode _ "</refbookCode1>" _
+			"<version1>" _ ..version _ "</version1>" _
+		"</getRefbook>")
+	
+	// в эту переменную попадет ответ сервиса
+	#dim outNode As %XML.Node = ##class(%XML.Node).%New()
+
+	// собственно вызов веб-сервиса
+	#dim client As %SOAP.WebRequest = ##class(%SOAP.WebRequest).%New()
+	set client.Location = ..URL
+	#dim callStatus As %Status = client.SendSOAPBody(..soapAction, $$$NO, request, .outNode)  // $$$NO = not one-way
+	if $$$ISERR(callStatus) quit callStatus
+	
+	// обработка ответа: сериализация %XML.Node в поток
+	#dim stream As %GlobalCharacterStream = ##class(%GlobalCharacterStream).%New()
+	do ..writeXmlNodeToStream(outNode, stream)
+	
+	set pResponse = ##class(Ens.StreamContainer).%New(stream)
+	quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="writeXmlNodeToStream">
+<Description>
+Вспомогательный метод: сериализация %XML.Node в поток</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>xmlNode:%XML.Node,stream:%Stream.Object</FormalSpec>
+<Private>1</Private>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	#dim writer As %XML.Writer = ##class(%XML.Writer).%New()
+	set writer.NoXMLDeclaration = $$$YES
+	
+	#dim sc As %Status = writer.OutputToStream(stream)
+	if $$$ISERR(sc) quit sc
+		
+	set sc = writer.DocumentNode(xmlNode)
+	if $$$ISERR(sc) quit sc
+	
+	quit $$$OK
+]]></Implementation>
+</Method>
+</Class>
+
+
+<Class name="staff.production.NsiProcess">
+<Description>
+Процесс обработки изменений справочника типов документов: 1) загрузка свежей версии справочника из системы НСИ, 2) сверка данных с текущим содержимым staff.model.DocumentType, 3) задача Оператору на обработку изменений, 4) ожидание согласования изменений, 5) сохранение изменений в staff.model.DocumentType</Description>
+<ClassType>persistent</ClassType>
+<ProcedureBlock>1</ProcedureBlock>
+<Super>Ens.BusinessProcessBPL</Super>
+<TimeChanged>64026,64616.572759</TimeChanged>
+<TimeCreated>64022,83201.326987</TimeCreated>
+
+<Property name="nsiCode">
+<Description>
+Код справочника (NK0469 - это код справочника типов удостоверяющих документов в федеральной системе НСИ)</Description>
+<Type>%String</Type>
+<InitialExpression>"NK0469"</InitialExpression>
+</Property>
+
+<Parameter name="SETTINGS">
+<Description>
+Свойства, указанные в параметре SETTINGS, отображаются в настройках данного процесса на экране продукции</Description>
+<Default>nsiCode:Basic</Default>
+</Parameter>
+
+<XData name="BPL">
+<XMLNamespace>http://www.intersystems.com/bpl</XMLNamespace>
+<Data><![CDATA[
+<process language='objectscript' request='Ens.Request' response='Ens.Response'>
+<context>
+<property name="pending" type="%Boolean"/>
+<property name="nsiResponseStream" type="%GlobalCharacterStream"/>
+<property name="items" type="staff.production.DocumentTypeDiff" collection="list"/>
+<property name="i" type="%Integer"/>
+<property name="item" type="staff.production.DocumentTypeDiff"/>
+<property name="formFields" type="%String">
+<parameters><parameter name="MAXLEN" value='32000'/></parameters>
+</property>
+<property name="formValues" type="%String" collection="array">
+<parameters><parameter name="MAXLEN" value='32000'/></parameters>
+</property>
+<property name="field" type="%String">
+<parameters><parameter name="MAXLEN" value='32000'/></parameters>
+</property>
+<property name="action" type="%String"/>
+<property name="approved" type="%Boolean"/>
+<property name="itemsToApprove" type="staff.production.ItemsToApprove"/>
+<property name="modelObject" type="staff.model.DocumentType"/>
+</context>
+<sequence>
+<sql>
+<annotation>Выяснить наличие незавершенного процесса обработки справочника</annotation>
+<![CDATA[select (count(*) - 1) into :context.pending from staff_production.NsiProcess]]]]><![CDATA[>
+</sql>
+
+<branch condition="context.pending" label="finish">
+<annotation>Если имеется незавершенный процесс обработки справочника, то выходим</annotation>
+</branch>
+
+<call name="Вызов сервиса НСИ" target="Вызов сервиса НСИ" async="0">
+<annotation>Вызов сервиса НСИ</annotation>
+<request type="Ens.StringContainer">
+<assign property="callrequest.StringValue" value='..%Process.nsiCode'/>
+</request>
+<response type="Ens.StreamContainer">
+<assign property="status" value='context.nsiResponseStream.CopyFrom(callresponse.Stream)'/>
+</response>
+</call>
+
+<assign property="status" value='..%Process.getDocumentTypeDiffs(context.nsiResponseStream, context.items)'>
+<annotation>Получение списка элементов справочника "Типы документов", данные которых отличаются от текущего состояния staff.model.DocumentType</annotation>
+</assign>
+
+<branch condition="context.items.Count() = 0" label="finish">
+<annotation>Если данные справочника не изменились, то завершаем работу</annotation>
+</branch>
+
+<foreach key="context.i" property="context.items">
+<annotation>Заполнение списка меток полей (formFields) и массива значений (formValues) для отправки в workflow-задачу</annotation>
+<assign property="context.item" value='context.items.GetAt(context.i)'/>
+<assign property="context.field" value='$case(context.item.oldName, "":"Новый тип " _ context.item.ID _ ": ", :"Тип " _ context.item.ID _ " - " _ $translate(context.item.oldName, ",", ".") _ ": ")'/>
+<assign property="context.formFields" value='context.formFields _ "," _ context.field'/>
+<assign property="context.formValues" value='context.item.newName' key='context.field'/>
+</foreach>
+
+<assign property="context.formFields" value='$zstrip(context.formFields, "&lt;&gt;", ",")'/>
+
+<call name="Обработка изменений НСИ" target="Оператор" async="0">
+<annotation>Workflow: Обработка изменений НСИ</annotation>
+<request type="EnsLib.Workflow.TaskRequest">
+<assign property="callrequest.%Actions" value='"Отклонить,Отправить на согласование"'/>
+<assign property="callrequest.%Subject" value='"Обработать изменения данных справочника"'/>
+<assign property="callrequest.%Message" value='"При необходимости отредактируйте новые названия типов документов и нажмите кнопку ""Отправить на согласование"""'/>
+<assign property="callrequest.%FormFields" value='context.formFields'/>
+<assign property="callrequest.%FormValues" value='context.formValues'/>
+<assign property="callrequest.%FormTemplate" value='"staff.production.CustomForm.cls"'/>
+</request>
+<response type="EnsLib.Workflow.TaskResponse">
+<assign property="context.formValues" value='callresponse.%FormValues'/>
+<assign property="context.action" value='callresponse.%Action'/>
+</response>
+</call>
+
+<branch condition='context.action = "Отклонить"' label="finish">
+<annotation>Если пользователь кликнул Отклонить, то завершаем работу</annotation>
+</branch>
+
+<assign property="context.itemsToApprove" value='..%Process.createItemsToApprove(context)'>
+<annotation>Заполнение объекта staff.production.ItemsToApprove</annotation>
+</assign>
+
+<assign property="status" value="context.itemsToApprove.%Save()">
+<annotation>Сохранение объекта staff.production.ItemsToApprove в БД</annotation>
+</assign>
+
+<call name="Ожидание согласования изменений" target="Ожидание согласования изменений" async="0">
+<annotation>Ожидание согласования изменений</annotation>
+<request type="Ens.StringContainer">
+<assign property="callrequest.StringValue" value="context.itemsToApprove.%Oid()"/>
+<assign property="context.itemsToApprove" value='""'/>
+</request>
+<response type="Ens.StringContainer">
+<assign property="context.approved" value='(callresponse.StringValue = "1")'/>
+</response>
+</call>
+
+<if condition='context.approved'>
+<annotation>Если изменения согласованы, то сохраняем их в основную модель данных</annotation>
+<true>
+<trace value='"Изменения согласованы"'/>
+
+<foreach key="context.i" property="context.items">
+<annotation>Сохранение изменений в модель данных</annotation>
+<assign property="context.item" value='context.items.GetAt(context.i)'/>
+<assign property="context.modelObject" value='$classmethod("staff.model.DocumentType", $case(context.item.oldName, "":"%New", :"%OpenId"), context.item.ID)'/>
+<assign property="context.modelObject.ID" value='context.item.ID'/>
+<assign property="context.modelObject.Name" value='context.item.newName'/>
+<assign property="status" value='context.modelObject.%Save()'/>
+</foreach>
+</true>
+</if>
+
+<label name="finish"/>
+</sequence>
+</process>
+]]></Data>
+</XData>
+
+<Method name="getDocumentTypeDiffs">
+<Description>
+Обработка ответа сервиса НСИ: наполнение списка элементов справочника "Типы документов", данные которых отличаются от текущего состояния staff.model.DocumentType</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>stream:%Stream.Object,list:%ListOfObjects</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	// трансформируем поток для последующего проецирования в объекты staff.production.DocumentTypeDiff
+	#dim xslStream As %Stream.Object = ##class(%Dictionary.CompiledXData).%OpenId(..%ClassName(1) _ "||" _ "convertResponseXSL").Data
+	
+	#dim transformedStream As %XML.FileCharacterStream = ##class(%XML.FileCharacterStream).%New()
+	set transformedStream.TranslateTable = "UTF8"
+	
+	#dim sc As %Status = ##class(%XML.XSLT.Transformer).TransformStream(stream, xslStream, transformedStream)
+	if $$$ISERR(sc) quit sc
+	
+	$$$TRACE("Трансформированный ответ сервиса НСИ: " _ transformedStream.Read())
+	
+	#dim reader As %XML.Reader = ##class(%XML.Reader).%New()
+	set sc = reader.OpenStream(transformedStream, "literal")
+	if $$$ISERR(sc) quit sc
+	
+	// проецируем XML в объекты staff.production.DocumentTypeDiff	
+	do reader.Correlate("item", ##class(staff.production.DocumentTypeDiff).%ClassName(1))
+	
+	#dim obj As staff.production.DocumentTypeDiff
+	while reader.Next(.obj, .sc)
+	{
+		if $$$ISERR(sc) quit
+		
+		// извлекаем текущее название типа документа из staff.model.DocumentType
+		#dim modelObj As staff.model.DocumentType  = ##class(staff.model.DocumentType).%OpenId(obj.ID)
+		if $isObject(modelObj) set obj.oldName = modelObj.Name
+		
+		// если новое название отличается от старого, то добавляем элемент в список
+		if (obj.oldName '= obj.newName) do list.Insert(obj)
+	}
+	
+	quit sc
+]]></Implementation>
+</Method>
+
+<XData name="convertResponseXSL">
+<Description>
+XSLT шаблон для преобразования ответа сервиса НСИ к виду, пригодному для проецирования в объекты staff.production.DocumentTypeDiff</Description>
+<Data><![CDATA[
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+<xsl:output method="xml" omit-xml-declaration="yes" indent="no" />
+<xsl:template match="/">
+<items>
+<xsl:for-each select="/*/*/item">
+<item>
+<ID><xsl:value-of select="./item[key='N_ID']/value"/></ID>
+<newName><xsl:value-of select="./item[key='S_NAME']/value"/></newName>
+</item>
+</xsl:for-each>
+</items>
+</xsl:template>
+</xsl:stylesheet>
+]]></Data>
+</XData>
+
+<Method name="createItemsToApprove">
+<Description>
+Создание и заполнение объекта staff.production.ItemsToApprove по данным контекста процесса</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>context:%Persistent</FormalSpec>
+<ReturnType>staff.production.ItemsToApprove</ReturnType>
+<Implementation><![CDATA[
+	#dim itemsToApprove As staff.production.ItemsToApprove = ##class(staff.production.ItemsToApprove).%New()
+	
+	for i = 1:1:context.items.Count()
+	{
+		#dim item As staff.production.DocumentTypeDiff = context.items.GetAt(i)
+		#dim field As %String = $piece(context.formFields, ",", i)
+		set item.newName = context.formValues.GetAt(field)
+		
+		if (item.oldName = "")
+		{
+			set itemsToApprove.items = itemsToApprove.items _ " | " _ "Новый тип документов: " _ item.newName
+		}
+		else
+		{
+			set itemsToApprove.items = itemsToApprove.items _ " | " _ "Изменение типа документов " _ item.ID _ ": " _ item.oldName_ " > " _ item.newName
+		}
+	}
+	
+	set itemsToApprove.items = "СПРАВОЧНИК ТИПОВ ДОКУМЕНТОВ: " _ $zstrip(itemsToApprove.items, "<>W", "|")
+	
+	quit itemsToApprove
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DefaultData>NsiProcessDefaultData</DefaultData>
+<Data name="NsiProcessDefaultData">
+<Subscript>"NsiProcess"</Subscript>
+<Value name="1">
+<Value>nsiCode</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+
+
+<Class name="staff.production.Production">
+<Super>Ens.Production</Super>
+<TimeChanged>64026,69848.203818</TimeChanged>
+<TimeCreated>64022,82992.261401</TimeCreated>
+
+<XData name="ProductionDefinition">
+<Data><![CDATA[
+<Production Name="staff.production.Production" TestingEnabled="true" LogGeneralTraceEvents="true">
+  <Description></Description>
+  <ActorPoolSize>2</ActorPoolSize>
+  <Item Name="Запуск обработки справочника" Category="" ClassName="staff.production.SimpleService" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="target">Обработка изменений справочника</Setting>
+    <Setting Target="Adapter" Name="CallInterval">3600</Setting>
+  </Item>
+  <Item Name="Обработка изменений справочника" Category="" ClassName="staff.production.NsiProcess" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+  </Item>
+  <Item Name="Вызов сервиса НСИ" Category="" ClassName="staff.production.NsiOperation" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+  </Item>
+  <Item Name="Оператор" Category="" ClassName="EnsLib.Workflow.Operation" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="AutoCreateRole">1</Setting>
+  </Item>
+  <Item Name="Ожидание согласования изменений" Category="" ClassName="staff.production.NsiApprovalOperation" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+  </Item>
+  <Item Name="Согласователь" Category="" ClassName="EnsLib.Workflow.Operation" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="AutoCreateRole">1</Setting>
+  </Item>
+  <Item Name="Согласование изменений НСИ" Category="" ClassName="staff.production.ApprovalBatchProcess" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+  </Item>
+  <Item Name="Запуск согласования изменений НСИ" Category="" ClassName="staff.production.ApprovalBatchService" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="target">Согласование изменений НСИ</Setting>
+    <Setting Target="Adapter" Name="CallInterval">3600</Setting>
+  </Item>
+</Production>
+]]></Data>
+</XData>
+</Class>
+
+
+<Class name="staff.production.SimpleService">
+<Description>
+Служба, инициирующая запуск процесса, указанного в настройке target</Description>
+<Super>Ens.BusinessService</Super>
+<TimeChanged>64026,64341.870692</TimeChanged>
+<TimeCreated>64024,31189.656662</TimeCreated>
+
+<Property name="target">
+<Description>
+Имя целевого бизнес-процесса</Description>
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Parameter name="SETTINGS">
+<Description>
+Свойства, указанные в параметре SETTINGS, отображаются в настройках данной службы на экране продукции</Description>
+<Default><![CDATA[target:Basic:selector?context={Ens.ContextSearch/ProductionItems?targets=1&productionName=@productionId}]]></Default>
+</Parameter>
+
+<Parameter name="ADAPTER">
+<Description>
+Благодаря наличию адаптера можно настроить автоматический запуск службы с интервалом CallInterval секунд</Description>
+<Default>Ens.InboundAdapter</Default>
+</Parameter>
+
+<Method name="OnProcessInput">
+<Description>
+Основной метод бизнес-службы, вызываемый Ensemble по сигналу от адаптера</Description>
+<FormalSpec><![CDATA[pInput:%RegisteredObject,*pOutput:%RegisteredObject,&pHint:%String]]></FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	// асинхроный (безответный) запуск бизнес-процесса
+	quit ..SendRequestAsync(..target, "")
+]]></Implementation>
+</Method>
+
+<Method name="OnInit">
+<Description>
+Инициализация службы</Description>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	if (..target = "") quit $$$ERROR($$$GeneralError, "Не задано значение настройки target")
+	quit $$$OK
+]]></Implementation>
+</Method>
+</Class>
+</Export>
