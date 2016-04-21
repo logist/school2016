@@ -1,12 +1,12 @@
-Class staff.ui.Citizenship
+Class staff.ui.Marriage
 {
 
 ClassMethod GetMenuData() As %Object
 {
 	set properties=##class(%Object).$new()
-	set properties.shortHeader="Гражданство!!!"
-	set properties.longHeader="Классификатор Гражданства"
-	set properties.className="Citizenship"
+	set properties.shortHeader="Семейное положение"
+	set properties.longHeader="Классификатор Семейных положений"
+	set properties.className="Marriage"
 	quit properties 
 }
 
@@ -15,7 +15,7 @@ ClassMethod GetListTemplate()
 	&html<
 	<md-list>
 	  <md-list-item ng-repeat="item in ctrl.list" ng-click="ctrl.onListClick(item.ID)">
-	    <span>{{item.Name}} привет!</span> 
+	    <span>{{item.Name}}</span> 
 	  </md-list-item>
 	</md-list>
 	>
@@ -25,12 +25,12 @@ ClassMethod GetListController()
 {
 	&js<
 	angular.module('StaffApp')
-	.controller('CitizenshipListController',function($resource,$location) {
+	.controller('MarriageListController',function($resource,$location) {
 		var self=this;
-		var Citizenship=$resource('api/object/Citizenship/:ID')
-		self.list=Citizenship.query();
+		var Marriage=$resource('api/object/Marriage/:ID')
+		self.list=Marriage.query();
 		self.onListClick=function(id) {
-	        $location.url('/Object/Citizenship/'+id);
+	        $location.url('/Object/Marriage/'+id);
 		}
 	});
 	>
@@ -53,12 +53,12 @@ ClassMethod GetEditController()
 {
 	&js<
 	angular.module('StaffApp')
-	.controller('CitizenshipEditController',function($resource,$routeParams,$window) {
+	.controller('MarriageEditController',function($resource,$routeParams,$window) {
 		var self=this;
-		var Citizenship=$resource('api/object/Citizenship/:ID')
-		self.obj=Citizenship.get({ID:$routeParams.id});
+		var Marriage=$resource('api/object/Marriage/:ID')
+		self.obj=Marriage.get({ID:$routeParams.id});
 		self.save = function() {
-			obj.$save().then(function(){
+			self.obj.$save().then(function(){
 				$window.history.back();
 			});
 		}
